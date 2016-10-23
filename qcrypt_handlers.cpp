@@ -134,9 +134,9 @@ int qcrypt_aes_cbc(int args, string input, string output, string key, string tex
 		}
 		else ins.read((char *)iv, AES::BLOCKSIZE);
 
-		string encoded_iv;
+		/*string encoded_iv;
 		ArraySource ivas(iv, AES::BLOCKSIZE, true, new Base64Encoder(new StringSink(encoded_iv)));
-		cout << "IV: " << encoded_iv << endl;
+		cout << "IV: " << encoded_iv << endl;*/
 
 		/*char c;
 		ins >> c;

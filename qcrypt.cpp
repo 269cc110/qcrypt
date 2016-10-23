@@ -43,7 +43,7 @@ void print_help(char *invname)
 	cout << "\t\tsupported algorithms: AES-256-CBC (default), AES-192-CBC, AES-128-CBC" << endl;
 	cout << "\t-s - silent operation (no stdout except generated key)" << endl;
 	cout << "\t-v - verbose operation" << endl;
-	cout << "\t-t - plaintext mode (output file for encryption, input file for decryption)" << endl;
+	cout << "\t-t - plaintext mode (output file for encryption, input file for decryption) [CURRENTLY UNSUPPORTED]" << endl;
 	cout << "\t\tsupported modes: hex, base32, base64 (default)" << endl;
 }
 
@@ -250,6 +250,9 @@ int rmain(int argc, char *argv[], std::vector<string> supported_textmodes, std::
 				break;
 
 			case 't':
+				cerr << "textmode is currently unsupported" << endl;
+				return 1;
+
 				if(args & 256)
 				{
 					cerr << "duplicate argument -t" << endl;
@@ -325,7 +328,7 @@ int rmain(int argc, char *argv[], std::vector<string> supported_textmodes, std::
 
 	if(!file_exists(input))
 	{
-		cerr << "file not found" << endl;
+		cerr << "failed to open file" << endl;
 		return -8;
 	}
 
