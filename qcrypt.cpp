@@ -7,6 +7,7 @@
 
 #include <sys/stat.h>
 #include <unistd.h>
+#include <errno.h>
 
 #include <cryptopp/cryptlib.h>
 
@@ -17,6 +18,10 @@ using std::endl;
 using std::cerr;
 using std::cin;
 using std::string;
+
+std::map<string, qcrypt_handler *> *handlers;
+
+const string default_algorithm = "aes-256-cbc";
 
 bool file_exists(string &name)
 {
@@ -31,7 +36,7 @@ void to_lower(string &data)
 
 void print_help(char *invname)
 {
-	cout << "qcrypt 0.1" << endl << endl;
+	cout << "qcrypt 0.2" << endl << endl;
 	cout << invname << " [[-e | -d] | -h | -i <infile> | -o <outfile> | -k <key> | -a <algorithm> | [-s | -v] | -t]..." << endl;
 	cout << "\t-e - encryption mode" << endl;
 	cout << "\t-d - decryption mode" << endl;
@@ -40,7 +45,27 @@ void print_help(char *invname)
 	cout << "\t-o - specifies output file" << endl;
 	cout << "\t-k - specifies decryption key (only valid with -d)" << endl;
 	cout << "\t-a - specifies algorithm" << endl;
-	cout << "\t\tsupported algorithms: AES-256-CBC (default), AES-192-CBC, AES-128-CBC" << endl;
+
+	cout << "\t\tsupported algorithms: ";
+
+	bool first = true;
+	string algorithm;
+
+	for(auto &handler : *handlers)
+	{
+		algorithm = handler.first;
+
+		if(!first) cout << ", ";
+
+		cout << algorithm;
+
+		if(algorithm == default_algorithm) cout << " (default)";
+
+		first = false;
+	}
+
+	cout << endl;
+
 	cout << "\t-s - silent operation (no stdout except generated key)" << endl;
 	cout << "\t-v - verbose operation" << endl;
 	cout << "\t-t - plaintext mode (output file for encryption, input file for decryption) [CURRENTLY UNSUPPORTED]" << endl;
@@ -372,9 +397,37 @@ int rmain(int argc, char *argv[], std::vector<string> supported_textmodes, std::
 
 int main(int argc, char *argv[])
 {
+	handlers = new std::map<string, qcrypt_handler *>;
+
+#define HANDLER(al, kl, mode) (*handlers)[string(#al) + "-" + string(#kl) + "-" + string(#mode)] = new qcrypt_##al##_##kl##_##mode;
+
+	HANDLER(aes, 256, cbc)
+	HANDLER(aes, 192, cbc)
+	HANDLER(aes, 128, cbc)
+
+	HANDLER(blowfish, 256, cbc)
+
+	HANDLER(twofish, 256, cbc)
+	HANDLER(twofish, 192, cbc)
+	HANDLER(twofish, 128, cbc)
+
+	HANDLER(serpent, 256, cbc)
+	HANDLER(serpent, 192, cbc)
+	HANDLER(serpent, 128, cbc)
+
+#undef HANDLER
+
 	if(argc < 2)
 	{
 		print_help(argv[0]);
+
+		for(auto &p : *handlers)
+		{
+			delete p.second;
+		}
+
+		delete handlers;
+
 		return 0;
 	}
 
@@ -384,18 +437,14 @@ int main(int argc, char *argv[])
 	supported_textmodes.push_back("base32");
 	supported_textmodes.push_back("base64");
 
-	std::map<string, qcrypt_handler *> handlers;
+	int errcode = rmain(argc, argv, supported_textmodes, *handlers);
 
-	handlers["aes-256-cbc"] = new qcrypt_aes_256_cbc;
-	handlers["aes-192-cbc"] = new qcrypt_aes_192_cbc;
-	handlers["aes-128-cbc"] = new qcrypt_aes_128_cbc;
-
-	int errcode = rmain(argc, argv, supported_textmodes, handlers);
-
-	for(auto &p : handlers)
+	for(auto &p : *handlers)
 	{
 		delete p.second;
 	}
+
+	delete handlers;
 
 	return errcode;
 }

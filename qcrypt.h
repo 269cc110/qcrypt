@@ -31,6 +31,16 @@ HANDLER(aes_256_cbc)
 HANDLER(aes_192_cbc)
 HANDLER(aes_128_cbc)
 
+HANDLER(blowfish_256_cbc)
+
+HANDLER(twofish_256_cbc)
+HANDLER(twofish_192_cbc)
+HANDLER(twofish_128_cbc)
+
+HANDLER(serpent_256_cbc)
+HANDLER(serpent_192_cbc)
+HANDLER(serpent_128_cbc)
+
 #undef HANDLER
 
 #endif /* QCRYPT_H_ */
