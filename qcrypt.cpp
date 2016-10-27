@@ -1,3 +1,21 @@
+/*
+ *	qcrypt - quick tool for encrypting and decrypting files
+ *	Copyright (C) 2016 condorcraft110
+ *
+ *	This program is free software: you can redistribute it and/or modify
+ *	it under the terms of the GNU General Public License as published by
+ *	the Free Software Foundation, either version 3 of the License, or
+ *	(at your option) any later version.
+ *
+ *	This program is distributed in the hope that it will be useful,
+ *	but WITHOUT ANY WARRANTY; without even the implied warranty of
+ *	MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ *	GNU General Public License for more details.
+ *
+ *	You should have received a copy of the GNU General Public License
+ *	along with this program.  If not, see <http://www.gnu.org/licenses/>.
+ */
+
 #include <iostream>
 #include <string>
 #include <cstring>
@@ -7,7 +25,6 @@
 
 #include <sys/stat.h>
 #include <unistd.h>
-#include <errno.h>
 
 #include <cryptopp/cryptlib.h>
 
@@ -37,10 +54,11 @@ void to_lower(string &data)
 void print_help(char *invname)
 {
 	cout << "qcrypt 0.2" << endl << endl;
-	cout << invname << " [[-e | -d] | -h | -i <infile> | -o <outfile> | -k <key> | -a <algorithm> | [-s | -v] | -t]..." << endl;
+	cout << invname << " [[-e | -d] | -h | -l | -i <infile> | -o <outfile> | -k <key> | -a <algorithm> | [-s | -v] | -t]..." << endl;
 	cout << "\t-e - encryption mode" << endl;
 	cout << "\t-d - decryption mode" << endl;
 	cout << "\t-h - prints this help message and exits, if the only argument" << endl;
+	cout << "\t-h - prints the licence and exits, if the only argument" << endl;
 	cout << "\t-i - specifies input file" << endl;
 	cout << "\t-o - specifies output file" << endl;
 	cout << "\t-k - specifies decryption key (only valid with -d)" << endl;
@@ -72,6 +90,22 @@ void print_help(char *invname)
 	cout << "\t\tsupported modes: hex, base32, base64 (default)" << endl;
 }
 
+void print_licence()
+{
+	cout << "qcrypt - quick tool for encrypting and decrypting files" << endl << endl;
+	cout << "Copyright (C) 2016 condorcraft110" << endl << endl;
+	cout << "This program is free software: you can redistribute it and/or modify" << endl;
+	cout << "it under the terms of the GNU General Public License as published by" << endl;
+	cout << "the Free Software Foundation, either version 3 of the License, or" << endl;
+	cout << "(at your option) any later version." << endl << endl;
+	cout << "This program is distributed in the hope that it will be useful," << endl;
+	cout << "but WITHOUT ANY WARRANTY; without even the implied warranty of" << endl;
+	cout << "MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the" << endl;
+	cout << "GNU General Public License for more details." << endl << endl;
+	cout << "You should have received a copy of the GNU General Public License" << endl;
+	cout << "along with this program.  If not, see <http://www.gnu.org/licenses/>." << endl;
+}
+
 int rmain(int argc, char *argv[], std::vector<string> supported_textmodes, std::map<string, qcrypt_handler *> handlers)
 {
 	char *arg;
@@ -87,10 +121,18 @@ int rmain(int argc, char *argv[], std::vector<string> supported_textmodes, std::
 			return -1;
 		}
 
-		if(i == 1 && !strcmp(arg, (char *)"-h"))
+		if(i == 1)
 		{
-			print_help(argv[0]);
-			return 0;
+			if(!strcmp(arg, (char *)"-h"))
+			{
+				print_help(argv[0]);
+				return 0;
+			}
+			else if(!strcmp(arg, (char *)"-l"))
+			{
+				print_licence();
+				return 0;
+			}
 		}
 
 		switch(arg[1])
