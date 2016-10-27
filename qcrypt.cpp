@@ -26,7 +26,7 @@
 #include <sys/stat.h>
 #include <unistd.h>
 
-#include <cryptopp/cryptlib.h>
+#include "cryptopp/cryptlib.h"
 
 #include "qcrypt.h"
 
@@ -57,8 +57,8 @@ void print_help(char *invname)
 	cout << invname << " [[-e | -d] | -h | -l | -i <infile> | -o <outfile> | -k <key> | -a <algorithm> | [-s | -v] | -t]..." << endl;
 	cout << "\t-e - encryption mode" << endl;
 	cout << "\t-d - decryption mode" << endl;
-	cout << "\t-h - prints this help message and exits, if the only argument" << endl;
-	cout << "\t-h - prints the licence and exits, if the only argument" << endl;
+	cout << "\t-h - prints this help message and exits, if the first argument" << endl;
+	cout << "\t-h - prints the licence and exits, if the first argument" << endl;
 	cout << "\t-i - specifies input file" << endl;
 	cout << "\t-o - specifies output file" << endl;
 	cout << "\t-k - specifies decryption key (only valid with -d)" << endl;
@@ -121,7 +121,7 @@ int rmain(int argc, char *argv[], std::vector<string> supported_textmodes, std::
 			return -1;
 		}
 
-		if(i == 1)
+		if(i == 1 && argc == 2)
 		{
 			if(!strcmp(arg, (char *)"-h"))
 			{
@@ -405,7 +405,7 @@ int rmain(int argc, char *argv[], std::vector<string> supported_textmodes, std::
 
 #undef SETSTR
 
-	if(!calgorithm) algorithm = "aes-256-cbc";
+	if(!calgorithm) algorithm = default_algorithm;
 	else
 	{
 		algorithm = string(calgorithm);
@@ -447,7 +447,13 @@ int main(int argc, char *argv[])
 	HANDLER(aes, 192, cbc)
 	HANDLER(aes, 128, cbc)
 
+	HANDLER(aes, 256, ofb)
+	HANDLER(aes, 192, ofb)
+	HANDLER(aes, 128, ofb)
+
 	HANDLER(blowfish, 256, cbc)
+
+	HANDLER(blowfish, 256, ofb)
 
 	HANDLER(twofish, 256, cbc)
 	HANDLER(twofish, 192, cbc)
@@ -456,6 +462,10 @@ int main(int argc, char *argv[])
 	HANDLER(serpent, 256, cbc)
 	HANDLER(serpent, 192, cbc)
 	HANDLER(serpent, 128, cbc)
+
+	HANDLER(mars, 256, cbc)
+	HANDLER(mars, 192, cbc)
+	HANDLER(mars, 128, cbc)
 
 #undef HANDLER
 

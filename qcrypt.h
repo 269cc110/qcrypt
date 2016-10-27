@@ -49,7 +49,13 @@ HANDLER(aes_256_cbc)
 HANDLER(aes_192_cbc)
 HANDLER(aes_128_cbc)
 
+HANDLER(aes_256_ofb)
+HANDLER(aes_192_ofb)
+HANDLER(aes_128_ofb)
+
 HANDLER(blowfish_256_cbc)
+
+HANDLER(blowfish_256_ofb)
 
 HANDLER(twofish_256_cbc)
 HANDLER(twofish_192_cbc)
@@ -58,6 +64,10 @@ HANDLER(twofish_128_cbc)
 HANDLER(serpent_256_cbc)
 HANDLER(serpent_192_cbc)
 HANDLER(serpent_128_cbc)
+
+HANDLER(mars_256_cbc)
+HANDLER(mars_192_cbc)
+HANDLER(mars_128_cbc)
 
 #undef HANDLER
 
