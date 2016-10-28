@@ -53,7 +53,7 @@ void to_lower(string &data)
 
 void print_help(char *invname)
 {
-	cout << "qcrypt 0.2" << endl << endl;
+	cout << "qcrypt 0.3" << endl << endl;
 	cout << invname << " [[-e | -d] | -h | -l | -i <infile> | -o <outfile> | -k <key> | -a <algorithm> | [-s | -v] | -t]..." << endl;
 	cout << "\t-e - encryption mode" << endl;
 	cout << "\t-d - decryption mode" << endl;
@@ -459,13 +459,27 @@ int main(int argc, char *argv[])
 	HANDLER(twofish, 192, cbc)
 	HANDLER(twofish, 128, cbc)
 
+	HANDLER(twofish, 256, ofb)
+	HANDLER(twofish, 192, ofb)
+	HANDLER(twofish, 128, ofb)
+
 	HANDLER(serpent, 256, cbc)
 	HANDLER(serpent, 192, cbc)
 	HANDLER(serpent, 128, cbc)
 
+	HANDLER(serpent, 256, ofb)
+	HANDLER(serpent, 192, ofb)
+	HANDLER(serpent, 128, ofb)
+
 	HANDLER(mars, 256, cbc)
 	HANDLER(mars, 192, cbc)
 	HANDLER(mars, 128, cbc)
+
+	HANDLER(gost, 256, ofb)
+
+	HANDLER(mars, 256, ofb)
+	HANDLER(mars, 192, ofb)
+	HANDLER(mars, 128, ofb)
 
 #undef HANDLER
 

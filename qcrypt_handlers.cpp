@@ -35,6 +35,7 @@
 #include "cryptopp/twofish.h"
 #include "cryptopp/serpent.h"
 #include "cryptopp/mars.h"
+#include "cryptopp/gost.h"
 
 #include "qcrypt.h"
 
@@ -417,6 +418,25 @@ TWOFISH_CBC(128)
 
 #undef TWOFISH_CBC
 
+OFB(Twofish, twofish)
+
+#define TWOFISH_OFB(kl) int qcrypt_twofish_##kl##_ofb::process(int args, string input, string output, string key, string textmode, bool iknl) \
+{ \
+	if(kl != 256 && kl != 192 && kl != 128) \
+	{ \
+		cerr << "invalid key length " << kl << endl; \
+		return -6; \
+	} \
+\
+	return qcrypt_twofish_ofb(args, input, output, key, textmode, iknl, kl); \
+}
+
+TWOFISH_OFB(256)
+TWOFISH_OFB(192)
+TWOFISH_OFB(128)
+
+#undef TWOFISH_OFB
+
 CBC(Serpent, serpent)
 
 #define SERPENT_CBC(kl) int qcrypt_serpent_##kl##_cbc::process(int args, string input, string output, string key, string textmode, bool iknl) \
@@ -436,6 +456,25 @@ SERPENT_CBC(128)
 
 #undef SERPENT_CBC
 
+OFB(Serpent, serpent)
+
+#define SERPENT_OFB(kl) int qcrypt_serpent_##kl##_ofb::process(int args, string input, string output, string key, string textmode, bool iknl) \
+{ \
+	if(kl != 256 && kl != 192 && kl != 128) \
+	{ \
+		cerr << "invalid key length " << kl << endl; \
+		return -6; \
+	} \
+\
+	return qcrypt_serpent_ofb(args, input, output, key, textmode, iknl, kl); \
+}
+
+SERPENT_OFB(256)
+SERPENT_OFB(192)
+SERPENT_OFB(128)
+
+#undef SERPENT_OFB
+
 CBC(MARS, mars)
 
 #define MARS_CBC(kl) int qcrypt_mars_##kl##_cbc::process(int args, string input, string output, string key, string textmode, bool iknl) \
@@ -454,6 +493,42 @@ MARS_CBC(192)
 MARS_CBC(128)
 
 #undef MARS_CBC
+
+OFB(MARS, mars)
+
+#define MARS_OFB(kl) int qcrypt_mars_##kl##_ofb::process(int args, string input, string output, string key, string textmode, bool iknl) \
+{ \
+	if(kl % 32 || kl < 128 || kl > 448) \
+	{ \
+		cerr << "invalid key length " << kl << endl; \
+		return -6; \
+	} \
+\
+	return qcrypt_mars_ofb(args, input, output, key, textmode, iknl, kl); \
+}
+
+MARS_OFB(256)
+MARS_OFB(192)
+MARS_OFB(128)
+
+#undef MARS_OFB
+
+OFB(GOST, gost)
+
+#define GOST_OFB(kl) int qcrypt_gost_##kl##_ofb::process(int args, string input, string output, string key, string textmode, bool iknl) \
+{ \
+	if(kl != 256) \
+	{ \
+		cerr << "invalid key length " << kl << endl; \
+		return -6; \
+	} \
+\
+	return qcrypt_gost_ofb(args, input, output, key, textmode, iknl, kl); \
+}
+
+GOST_OFB(256)
+
+#undef GOST_OFB
 
 #undef CBC
 #undef OFB

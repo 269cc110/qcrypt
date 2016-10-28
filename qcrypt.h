@@ -61,13 +61,27 @@ HANDLER(twofish_256_cbc)
 HANDLER(twofish_192_cbc)
 HANDLER(twofish_128_cbc)
 
+HANDLER(twofish_256_ofb)
+HANDLER(twofish_192_ofb)
+HANDLER(twofish_128_ofb)
+
 HANDLER(serpent_256_cbc)
 HANDLER(serpent_192_cbc)
 HANDLER(serpent_128_cbc)
 
+HANDLER(serpent_256_ofb)
+HANDLER(serpent_192_ofb)
+HANDLER(serpent_128_ofb)
+
 HANDLER(mars_256_cbc)
 HANDLER(mars_192_cbc)
 HANDLER(mars_128_cbc)
+
+HANDLER(mars_256_ofb)
+HANDLER(mars_192_ofb)
+HANDLER(mars_128_ofb)
+
+HANDLER(gost_256_ofb)
 
 #undef HANDLER
 
